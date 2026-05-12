@@ -1,0 +1,196 @@
+version: '3.9'
+
+networks:
+  trucknest-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  keycloak_data:
+  kafka_data:
+  prometheus_data:
+  grafana_data:
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: trucknest-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - trucknest-network
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U trucknest -d trucknest']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0
+    container_name: trucknest-keycloak
+    restart: unless-stopped
+    command:
+      - start-dev
+      - --import-realm
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/trucknest
+      KC_DB_USERNAME: trucknest
+      KC_DB_PASSWORD: trucknestsecret
+      KC_DB_SCHEMA: keycloak
+      KC_HOSTNAME_STRICT: 'false'
+      KC_HTTP_ENABLED: 'true'
+    ports:
+      - '8080:8080'
+    volumes:
+      - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
+    networks:
+      - trucknest-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  kafka:
+    image: apache/kafka:3.7.0
+    container_name: trucknest-kafka
+    restart: unless-stopped
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+    ports:
+      - '9092:9092'
+    volumes:
+      - kafka_data:/var/lib/kafka/data
+    networks:
+      - trucknest-network
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          '/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list',
+        ]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: trucknest-kafka-ui
+    restart: unless-stopped
+    environment:
+      KAFKA_CLUSTERS_0_NAME: trucknest-local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+    ports:
+      - '8090:8080'
+    networks:
+      - trucknest-network
+    depends_on:
+      kafka:
+        condition: service_healthy
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: trucknest-prometheus
+    restart: unless-stopped
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --web.console.libraries=/usr/share/prometheus/console_libraries
+      - --web.console.templates=/usr/share/prometheus/consoles
+      - --storage.tsdb.retention.time=7d
+    ports:
+      - '9090:9090'
+    volumes:
+      - ./infrastructure/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    networks:
+      - trucknest-network
+    depends_on:
+      - spring-app
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: trucknest-grafana
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: 'false'
+      GF_SERVER_HTTP_PORT: '3001'
+    ports:
+      - '3001:3001'
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./infrastructure/grafana/provisioning:/etc/grafana/provisioning
+    networks:
+      - trucknest-network
+    depends_on:
+      - prometheus
+
+  spring-app:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: trucknest-backend
+    restart: unless-stopped
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/trucknest
+      SPRING_DATASOURCE_USERNAME: trucknest
+      SPRING_DATASOURCE_PASSWORD: trucknestsecret
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://keycloak:8080/realms/trucknest
+      SPRING_PROFILES_ACTIVE: docker
+    ports:
+      - '8081:8081'
+    networks:
+      - trucknest-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
+    profiles:
+      - full
+
+  next-app:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: trucknest-frontend
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8081
+      NEXT_PUBLIC_KEYCLOAK_URL: http://localhost:8080
+      NEXT_PUBLIC_KEYCLOAK_REALM: trucknest
+      NEXT_PUBLIC_KEYCLOAK_CLIENT_ID: trucknest-frontend
+    ports:
+      - '3000:3000'
+    networks:
+      - trucknest-network
+    depends_on:
+      - spring-app
+    profiles:
+      - full

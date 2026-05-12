@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: trucknest
+
+server:
+  port: 8081
