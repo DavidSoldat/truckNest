@@ -1,0 +1,4 @@
+spring:
+  datasource:
+    username: trucknest
+    password: trucknestsecret
