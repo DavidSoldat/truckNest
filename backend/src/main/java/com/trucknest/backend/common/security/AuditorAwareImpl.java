@@ -15,7 +15,7 @@ public class AuditorAwareImpl implements AuditorAware<String> {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication instanceof JwtAuthenticationToken jwtToken) {
-            return Optional.ofNullable((String) jwtToken.getToken().getClaimAsString("sub"));
+            return Optional.ofNullable(jwtToken.getToken().getClaimAsString("sub"));
         }
         return Optional.empty();
     }

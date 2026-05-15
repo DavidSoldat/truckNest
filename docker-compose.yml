@@ -1,4 +1,3 @@
-
 networks:
   trucknest-network:
     driver: bridge
@@ -28,6 +27,20 @@ services:
       - trucknest-network
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: trucknest-redis
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    networks:
+      - trucknest-network
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
       interval: 10s
       timeout: 5s
       retries: 5
