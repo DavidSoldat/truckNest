@@ -15,9 +15,11 @@ import java.util.UUID;
 public class TruckService {
 
     private final TruckRepository truckRepository;
+    private final TruckMapper truckMapper;
 
-    public TruckService(TruckRepository truckRepository) {
+    public TruckService(TruckRepository truckRepository, TruckMapper truckMapper) {
         this.truckRepository = truckRepository;
+        this.truckMapper = truckMapper;
     }
 
     public TruckResponse createTruck(TruckRequest request) {
@@ -35,23 +37,20 @@ public class TruckService {
         truck.setEuroStandard(request.euroStandard());
         truck.setNotes(request.notes());
 
-        Truck saved = truckRepository.save(truck);
-        return toResponse(truck);
+        return truckMapper.toResponse(truckRepository.save(truck));
     }
 
     public List<TruckResponse> getAllTrucks() {
         UUID companyId = UUID.fromString(TenantContext.getTenantId());
-        return truckRepository.findAllByCompanyId(companyId)
-                .stream()
-                .map(this::toResponse)
-                .toList();
+        return truckMapper.toResponseList(truckRepository.findAllByCompanyId(companyId));
     }
 
     public TruckResponse getTruckById(UUID id) {
         UUID companyId = UUID.fromString(TenantContext.getTenantId());
-        Truck truck = truckRepository.findByIdAndCompanyId(id, companyId)
-                .orElseThrow(() -> new EntityNotFoundException("Truck not found"));
-        return toResponse(truck);
+        return truckMapper.toResponse(
+                truckRepository.findByIdAndCompanyId(id, companyId)
+                        .orElseThrow(() -> new EntityNotFoundException("Truck not found"))
+        );
     }
 
     public TruckResponse updateTruck(UUID id, TruckRequest request) {
@@ -69,8 +68,7 @@ public class TruckService {
         truck.setEuroStandard(request.euroStandard());
         truck.setNotes(request.notes());
 
-        Truck saved = truckRepository.save(truck);
-        return toResponse(saved);
+        return truckMapper.toResponse(truckRepository.save(truck));
     }
 
     public void deleteTruck(UUID id) {
@@ -81,20 +79,20 @@ public class TruckService {
     }
 
 //    temp here, USE MAPSTRUCT!
-    private TruckResponse toResponse(Truck truck) {
-        return new TruckResponse(
-                truck.getId(),
-                truck.getPlateNumber(),
-                truck.getMake(),
-                truck.getModel(),
-                truck.getYear(),
-                truck.getVin(),
-                truck.getNextServiceDate(),
-                truck.getStatus(),
-                truck.getEuroStandard(),
-                truck.getNotes(),
-                truck.getCreatedAt(),
-                truck.getUpdatedAt()
-        );
-    }
+//    private TruckResponse toResponse(Truck truck) {
+//        return new TruckResponse(
+//                truck.getId(),
+//                truck.getPlateNumber(),
+//                truck.getMake(),
+//                truck.getModel(),
+//                truck.getYear(),
+//                truck.getVin(),
+//                truck.getNextServiceDate(),
+//                truck.getStatus(),
+//                truck.getEuroStandard(),
+//                truck.getNotes(),
+//                truck.getCreatedAt(),
+//                truck.getUpdatedAt()
+//        );
+//    }
 }

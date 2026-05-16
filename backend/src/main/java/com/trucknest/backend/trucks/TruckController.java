@@ -1,10 +1,8 @@
 package com.trucknest.backend.trucks;
 
-import com.trucknest.backend.trucks.dto.ServiceRecordRequest;
-import com.trucknest.backend.trucks.dto.ServiceRecordResponse;
-import com.trucknest.backend.trucks.dto.TruckRequest;
-import com.trucknest.backend.trucks.dto.TruckResponse;
+import com.trucknest.backend.trucks.dto.*;
 import com.trucknest.backend.trucks.internal.ServiceRecordService;
+import com.trucknest.backend.trucks.internal.TireService;
 import com.trucknest.backend.trucks.internal.TruckService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -20,10 +18,12 @@ public class TruckController {
 
     private final TruckService truckService;
     private final ServiceRecordService serviceRecordService;
+    private final TireService tireService;
 
-    public TruckController(TruckService truckService, ServiceRecordService serviceRecordService) {
+    public TruckController(TruckService truckService, ServiceRecordService serviceRecordService, TireService tireService) {
         this.truckService = truckService;
         this.serviceRecordService = serviceRecordService;
+        this.tireService = tireService;
     }
 
     @GetMapping
@@ -62,5 +62,23 @@ public class TruckController {
     public ResponseEntity<ServiceRecordResponse> addServiceRecord(@PathVariable("id") UUID id,
                                                                   @RequestBody @Valid ServiceRecordRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(serviceRecordService.addServiceRecord(id, request));
+    }
+
+    @GetMapping("/{id}/tires")
+    public ResponseEntity<List<TireResponse>> getTires(@PathVariable("id") UUID id) {
+        return ResponseEntity.ok(tireService.getTires(id));
+    }
+
+    @PostMapping("/{id}/tires")
+    public ResponseEntity<TireResponse> addTire(@PathVariable("id") UUID id,
+                                                @RequestBody @Valid TireRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(tireService.addTire(id, request));
+    }
+
+    @PutMapping("/{id}/tires/{tireId}")
+    public ResponseEntity<TireResponse> updateTire(@PathVariable("id") UUID id,
+                                                   @PathVariable("tireId") UUID tireId,
+                                                   @RequestBody @Valid TireRequest request) {
+        return ResponseEntity.ok(tireService.updateTire(id, tireId, request));
     }
 }

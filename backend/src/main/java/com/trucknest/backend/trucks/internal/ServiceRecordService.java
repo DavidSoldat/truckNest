@@ -14,10 +14,12 @@ public class ServiceRecordService {
 
     private final ServiceRecordRepository serviceRecordRepository;
     private final TruckRepository truckRepository;
+    private final ServiceRecordMapper serviceRecordMapper;
 
-    public ServiceRecordService(ServiceRecordRepository serviceRecordRepository, TruckRepository truckRepository) {
+    public ServiceRecordService(ServiceRecordRepository serviceRecordRepository, TruckRepository truckRepository, ServiceRecordMapper serviceRecordMapper) {
         this.serviceRecordRepository = serviceRecordRepository;
         this.truckRepository = truckRepository;
+        this.serviceRecordMapper = serviceRecordMapper;
     }
 
     public ServiceRecordResponse addServiceRecord(UUID truckId, ServiceRecordRequest request) {
@@ -40,8 +42,7 @@ public class ServiceRecordService {
             truckRepository.save(truck);
         }
 
-        ServiceRecord saved = serviceRecordRepository.save(record);
-        return toResponse(saved);
+        return serviceRecordMapper.toResponse(serviceRecordRepository.save(record));
     }
 
     public List<ServiceRecordResponse> getServiceRecords(UUID truckId) {
@@ -49,24 +50,21 @@ public class ServiceRecordService {
 
         truckRepository.findByIdAndCompanyId(truckId, companyId).orElseThrow(() -> new EntityNotFoundException("Truck not found"));
 
-        return serviceRecordRepository.findAllByTruckIdAndCompanyIdOrderByServiceDateDesc(truckId, companyId)
-                .stream()
-                .map(this::toResponse)
-                .toList();
+        return serviceRecordMapper.toResponseList(serviceRecordRepository.findAllByTruckIdAndCompanyIdOrderByServiceDateDesc(truckId, companyId));
     }
 
-    private ServiceRecordResponse toResponse(ServiceRecord record) {
-        return new ServiceRecordResponse(
-                record.getId(),
-                record.getTruck().getId(),
-                record.getServiceDate(),
-                record.getServiceType(),
-                record.getCost(),
-                record.getOdometerKm(),
-                record.getNextServiceDate(),
-                record.getNotes(),
-                record.getCreatedAt(),
-                record.getUpdatedAt()
-        );
-    }
+//    private ServiceRecordResponse toResponse(ServiceRecord record) {
+//        return new ServiceRecordResponse(
+//                record.getId(),
+//                record.getTruck().getId(),
+//                record.getServiceDate(),
+//                record.getServiceType(),
+//                record.getCost(),
+//                record.getOdometerKm(),
+//                record.getNextServiceDate(),
+//                record.getNotes(),
+//                record.getCreatedAt(),
+//                record.getUpdatedAt()
+//        );
+//    }
 }
