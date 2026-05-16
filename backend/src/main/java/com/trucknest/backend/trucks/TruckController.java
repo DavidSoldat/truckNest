@@ -1,7 +1,10 @@
 package com.trucknest.backend.trucks;
 
+import com.trucknest.backend.trucks.dto.ServiceRecordRequest;
+import com.trucknest.backend.trucks.dto.ServiceRecordResponse;
 import com.trucknest.backend.trucks.dto.TruckRequest;
 import com.trucknest.backend.trucks.dto.TruckResponse;
+import com.trucknest.backend.trucks.internal.ServiceRecordService;
 import com.trucknest.backend.trucks.internal.TruckService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -16,9 +19,11 @@ import java.util.UUID;
 public class TruckController {
 
     private final TruckService truckService;
+    private final ServiceRecordService serviceRecordService;
 
-    public TruckController(TruckService truckService) {
+    public TruckController(TruckService truckService, ServiceRecordService serviceRecordService) {
         this.truckService = truckService;
+        this.serviceRecordService = serviceRecordService;
     }
 
     @GetMapping
@@ -27,8 +32,8 @@ public class TruckController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TruckResponse> getTruckById(@PathVariable UUID truckId) {
-        return  ResponseEntity.ok(truckService.getTruckById(truckId));
+    public ResponseEntity<TruckResponse> getTruckById(@PathVariable UUID id) {
+        return  ResponseEntity.ok(truckService.getTruckById(id));
     }
 
     @PostMapping
@@ -46,5 +51,16 @@ public class TruckController {
     public ResponseEntity<Void> deleteTruck(@PathVariable UUID id) {
         truckService.deleteTruck(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/service-records")
+    public ResponseEntity<List<ServiceRecordResponse>> getServiceRecords(@PathVariable("id") UUID id) {
+        return ResponseEntity.ok(serviceRecordService.getServiceRecords(id));
+    }
+
+    @PostMapping("/{id}/service-records")
+    public ResponseEntity<ServiceRecordResponse> addServiceRecord(@PathVariable("id") UUID id,
+                                                                  @RequestBody @Valid ServiceRecordRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(serviceRecordService.addServiceRecord(id, request));
     }
 }
