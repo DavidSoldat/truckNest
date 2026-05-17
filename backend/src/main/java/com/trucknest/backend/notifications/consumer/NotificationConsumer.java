@@ -24,7 +24,7 @@ public class NotificationConsumer {
         this.mailSender = mailSender;
     }
 
-    @Value("${spring.mail.username}")
+    @Value("${brevo.from-email}")
     private String fromEmail;
 
     @KafkaListener(topics = KafkaTopics.SERVICE_DUE, groupId = "trucknest-notifications")

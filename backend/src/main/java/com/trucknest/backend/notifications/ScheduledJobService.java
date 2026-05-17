@@ -1,6 +1,7 @@
 package com.trucknest.backend.notifications;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.trucknest.backend.common.entity.CompanyQueryService;
 import com.trucknest.backend.drivers.DriverQueryService;
 import com.trucknest.backend.drivers.internal.DriverRepository;
 import com.trucknest.backend.invoices.InvoiceQueryService;
@@ -28,13 +29,15 @@ public class ScheduledJobService {
     private final InvoiceQueryService invoiceQueryService;
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final ObjectMapper objectMapper;
+    private final CompanyQueryService companyQueryService;
 
-    public ScheduledJobService(TruckQueryService truckQueryService, DriverQueryService driverQueryService, InvoiceQueryService invoiceQueryService, KafkaTemplate<String, Object> kafkaTemplate, ObjectMapper objectMapper) {
+    public ScheduledJobService(TruckQueryService truckQueryService, DriverQueryService driverQueryService, InvoiceQueryService invoiceQueryService, KafkaTemplate<String, Object> kafkaTemplate, ObjectMapper objectMapper, CompanyQueryService companyQueryService) {
         this.truckQueryService = truckQueryService;
         this.driverQueryService = driverQueryService;
         this.invoiceQueryService = invoiceQueryService;
         this.kafkaTemplate = kafkaTemplate;
         this.objectMapper = objectMapper;
+        this.companyQueryService = companyQueryService;
     }
 
     @Scheduled(cron = "0 0 8 * * *")
@@ -49,7 +52,7 @@ public class ScheduledJobService {
                         truck.plateNumber(),
                         truck.nextServiceDate(),
                         truck.companyId(),
-                        "davidsoldat00@gmail.com"
+                        companyQueryService.getCompanyEmail(truck.companyId())
                 );
                 kafkaTemplate.send(KafkaTopics.SERVICE_DUE,
                         objectMapper.writeValueAsString(event));
@@ -73,7 +76,7 @@ public class ScheduledJobService {
                         "LICENSE",
                         driver.licenseExpiry(),
                         driver.companyId(),
-                        "davidsoldat00@gmail.com"
+                        companyQueryService.getCompanyEmail(driver.companyId())
                 );
                 kafkaTemplate.send(KafkaTopics.DOCUMENT_EXPIRY,
                         objectMapper.writeValueAsString(event));
@@ -90,7 +93,7 @@ public class ScheduledJobService {
                         "VISA",
                         driver.visaExpiry(),
                         driver.companyId(),
-                        "davidsoldat00@gmail.com"
+                        companyQueryService.getCompanyEmail(driver.companyId())
                 );
                 kafkaTemplate.send(KafkaTopics.DOCUMENT_EXPIRY,
                         objectMapper.writeValueAsString(event));
@@ -115,7 +118,7 @@ public class ScheduledJobService {
                         invoice.dueDate(),
                         invoice.amount(),
                         invoice.companyId(),
-                        "davidsoldat00@gmail.com"
+                        companyQueryService.getCompanyEmail(invoice.companyId())
                 );
                 kafkaTemplate.send(KafkaTopics.INVOICE_OVERDUE,
                         objectMapper.writeValueAsString(event));
