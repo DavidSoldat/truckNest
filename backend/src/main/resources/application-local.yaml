@@ -5,5 +5,4 @@ spring:
 
 #logging:
 #  level:
-#    com.trucknest: DEBUG
-#    org.springframework.web: DEBUG
+#    org.springframework.mail: DEBUG

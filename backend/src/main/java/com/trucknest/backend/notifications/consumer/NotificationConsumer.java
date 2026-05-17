@@ -6,7 +6,10 @@ import com.trucknest.backend.notifications.event.InvoiceOverdueEvent;
 import com.trucknest.backend.notifications.event.KafkaTopics;
 import com.trucknest.backend.notifications.event.ServiceDueEvent;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,10 +17,15 @@ import org.springframework.stereotype.Component;
 public class NotificationConsumer {
 
     private final ObjectMapper objectMapper;
+    private final JavaMailSender mailSender;
 
-    public NotificationConsumer(ObjectMapper objectMapper) {
+    public NotificationConsumer(ObjectMapper objectMapper, JavaMailSender mailSender) {
         this.objectMapper = objectMapper;
+        this.mailSender = mailSender;
     }
+
+    @Value("${spring.mail.username}")
+    private String fromEmail;
 
     @KafkaListener(topics = KafkaTopics.SERVICE_DUE, groupId = "trucknest-notifications")
     public void handleServiceDue(String message) {
@@ -25,7 +33,6 @@ public class NotificationConsumer {
             ServiceDueEvent event = objectMapper.readValue(message, ServiceDueEvent.class);
             log.info("Received service due event for truck {} due on {}",
                     event.getPlateNumber(), event.getDueDate());
-            // TODO: send email via Brevo
             sendEmail(
                     event.getOwnerEmail(),
                     "Service Due: Truck " + event.getPlateNumber(),
@@ -45,9 +52,10 @@ public class NotificationConsumer {
                     event.getDriverName(), event.getDocumentType(), event.getExpiryDate());
             sendEmail(
                     event.getOwnerEmail(),
-                    "Document Expiry: " + event.getDocumentType() + " for " + event.getDriverName(),
-                    "Driver " + event.getDriverName() + "'s " + event.getDocumentType() +
-                            " expires on " + event.getExpiryDate()
+                    "Document Expiry: " + event.getDocumentType() +
+                            " for " + event.getDriverName(),
+                    "Driver " + event.getDriverName() + "'s " +
+                            event.getDocumentType() + " expires on " + event.getExpiryDate()
             );
         } catch (Exception e) {
             log.error("Failed to process document expiry event", e);
@@ -74,7 +82,16 @@ public class NotificationConsumer {
     }
 
     private void sendEmail(String to, String subject, String body) {
-        // TODO: integrate Brevo SMTP
-        log.info("EMAIL TO: {} | SUBJECT: {} | BODY: {}", to, subject, body);
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(fromEmail);
+            message.setTo(to);
+            message.setSubject(subject);
+            message.setText(body);
+            mailSender.send(message);
+            log.info("Email sent to {} with subject: {}", to, subject);
+        } catch (Exception e) {
+            log.error("Failed to send email to {}", to, e);
+        }
     }
 }

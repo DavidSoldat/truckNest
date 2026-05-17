@@ -49,7 +49,7 @@ public class ScheduledJobService {
                         truck.plateNumber(),
                         truck.nextServiceDate(),
                         truck.companyId(),
-                        "owner@trucknest.com"
+                        "davidsoldat00@gmail.com"
                 );
                 kafkaTemplate.send(KafkaTopics.SERVICE_DUE,
                         objectMapper.writeValueAsString(event));
@@ -73,7 +73,7 @@ public class ScheduledJobService {
                         "LICENSE",
                         driver.licenseExpiry(),
                         driver.companyId(),
-                        "owner@trucknest.com"
+                        "davidsoldat00@gmail.com"
                 );
                 kafkaTemplate.send(KafkaTopics.DOCUMENT_EXPIRY,
                         objectMapper.writeValueAsString(event));
@@ -90,7 +90,7 @@ public class ScheduledJobService {
                         "VISA",
                         driver.visaExpiry(),
                         driver.companyId(),
-                        "owner@trucknest.com"
+                        "davidsoldat00@gmail.com"
                 );
                 kafkaTemplate.send(KafkaTopics.DOCUMENT_EXPIRY,
                         objectMapper.writeValueAsString(event));
@@ -115,7 +115,7 @@ public class ScheduledJobService {
                         invoice.dueDate(),
                         invoice.amount(),
                         invoice.companyId(),
-                        "owner@trucknest.com"
+                        "davidsoldat00@gmail.com"
                 );
                 kafkaTemplate.send(KafkaTopics.INVOICE_OVERDUE,
                         objectMapper.writeValueAsString(event));
