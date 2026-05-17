@@ -27,7 +27,7 @@ spring:
           issuer-uri: http://localhost:8080/realms/trucknest
 
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: localhost:9093
     consumer:
       group-id: trucknest-notifications
       auto-offset-reset: earliest

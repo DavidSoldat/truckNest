@@ -18,4 +18,8 @@ public interface DriverRepository extends JpaRepository<Driver, UUID> {
     List<Driver> findAllByCompanyIdAndLicenseExpiryBefore(UUID companyId, LocalDate date);
 
     List<Driver> findAllByCompanyIdAndVisaExpiryBefore(UUID companyId, LocalDate date);
+
+    List<Driver> findAllByLicenseExpiryBefore(LocalDate date);
+
+    List<Driver> findAllByVisaExpiryBefore(LocalDate date);
 }

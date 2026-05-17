@@ -16,4 +16,6 @@ public interface TruckRepository extends JpaRepository<Truck, UUID> {
     Optional<Truck> findByIdAndCompanyId(UUID id, UUID companyId);
 
     List<Truck> findAllByCompanyIdAndNextServiceDateBefore(UUID companyId, LocalDate date);
+
+    List<Truck> findAllByNextServiceDateBefore(LocalDate date);
 }
