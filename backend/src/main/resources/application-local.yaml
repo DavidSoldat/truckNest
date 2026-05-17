@@ -3,6 +3,6 @@ spring:
     username: trucknest
     password: trucknestsecret
 
-#logging:
-#  level:
-#    org.springframework.mail: DEBUG
+logging:
+  level:
+    org.springframework.mail: DEBUG

@@ -1,11 +1,12 @@
 package com.trucknest.backend.drivers;
 
-import com.trucknest.backend.drivers.dto.DriverDocumentDto;
+import com.trucknest.backend.common.dto.DriverDocumentDto;
 import com.trucknest.backend.drivers.internal.DriverRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class DriverQueryService {
@@ -40,5 +41,9 @@ public class DriverQueryService {
                         driver.getCompanyId()
                 ))
                 .toList();
+    }
+
+    public long countByCompanyId(UUID companyId) {
+        return driverRepository.findAllByCompanyId(companyId).size();
     }
 }

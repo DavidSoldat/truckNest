@@ -1,4 +1,4 @@
-package com.trucknest.backend.invoices.dto;
+package com.trucknest.backend.common.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

@@ -1,4 +1,4 @@
-package com.trucknest.backend.trucks.dto;
+package com.trucknest.backend.common.dto;
 
 import java.time.LocalDate;
 import java.util.UUID;
