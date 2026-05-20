@@ -3,7 +3,6 @@ global:
   evaluation_interval: 15s
   scrape_timeout: 10s
 
-
 rule_files: []
 
 scrape_configs:
@@ -11,7 +10,7 @@ scrape_configs:
     metrics_path: /actuator/prometheus
     static_configs:
       - targets:
-          - spring-app:8081
+          - host.docker.internal:8081
         labels:
           app: trucknest
           env: local

@@ -66,7 +66,17 @@ management:
   endpoint:
     health:
       show-details: always
+    prometheus:
+      enabled: true
   prometheus:
     metrics:
       export:
         enabled: true
+
+keycloak:
+  admin:
+    server-url: http://localhost:8080
+    realm: trucknest
+    client-id: trucknest-backend
+    client-secret: ${KEYCLOAK_CLIENT_SECRET}
+    user-realm: trucknest

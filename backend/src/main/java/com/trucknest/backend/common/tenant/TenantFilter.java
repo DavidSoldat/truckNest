@@ -44,6 +44,6 @@ public class TenantFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
-        return path.startsWith("/actuator");
+        return path.startsWith("/actuator") || path.startsWith("/api/v1/auth");
     }
 }
