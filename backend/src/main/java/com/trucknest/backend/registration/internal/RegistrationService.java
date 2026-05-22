@@ -34,8 +34,8 @@ public class RegistrationService {
         company.setCompanyId(java.util.UUID.randomUUID());
         Company saved = companyRepository.save(company);
 
+        companyRepository.updateCompanyId(saved.getId());
         saved.setCompanyId(saved.getId());
-        saved = companyRepository.save(saved);
 
         String keycloakUserId = null;
         try {
