@@ -36,13 +36,13 @@ export function AppSidebar() {
   const pathname = usePathname();
   const router = useRouter();
 
- const clearAuth = useAuthStore((s) => s.clearAuth)
+  const clearAuth = useAuthStore((s) => s.clearAuth);
 
-const handleLogout = async () => {
-  await axios.post('/api/auth/logout')
-  clearAuth()
-  router.push('/login')
-}
+  const handleLogout = async () => {
+    await axios.post('/api/auth/logout');
+    clearAuth();
+    router.push('/login');
+  };
 
   return (
     <Sidebar>
@@ -86,7 +86,7 @@ const handleLogout = async () => {
           <SidebarMenuItem>
             <SidebarMenuButton
               onClick={handleLogout}
-              className='h-10 font-medium text-muted-foreground hover:text-destructive hover:bg-destructive/10'
+              className='h-10 cursor-pointer font-medium text-muted-foreground hover:text-destructive hover:bg-destructive/10'
             >
               <LogOut className='w-4 h-4' />
               <span>Sign out</span>

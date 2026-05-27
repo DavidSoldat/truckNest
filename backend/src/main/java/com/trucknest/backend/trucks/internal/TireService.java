@@ -66,20 +66,6 @@ public class TireService {
 
         return tireMapper.toResponseList(tireRepository.findAllByTruckIdAndCompanyId(truckId, companyId));
     }
-
-//    private TireResponse toResponse(Tire tire) {
-//        return new TireResponse(
-//                tire.getId(),
-//                tire.getTruck().getId(),
-//                tire.getPosition(),
-//                tire.getBrand(),
-//                tire.getFitDate(),
-//                tire.getExpectedReplacementDate(),
-//                tire.getNotes(),
-//                tire.getCreatedAt(),
-//                tire.getUpdatedAt()
-//        );
-//    }
 }
 
 

@@ -52,19 +52,4 @@ public class ServiceRecordService {
 
         return serviceRecordMapper.toResponseList(serviceRecordRepository.findAllByTruckIdAndCompanyIdOrderByServiceDateDesc(truckId, companyId));
     }
-
-//    private ServiceRecordResponse toResponse(ServiceRecord record) {
-//        return new ServiceRecordResponse(
-//                record.getId(),
-//                record.getTruck().getId(),
-//                record.getServiceDate(),
-//                record.getServiceType(),
-//                record.getCost(),
-//                record.getOdometerKm(),
-//                record.getNextServiceDate(),
-//                record.getNotes(),
-//                record.getCreatedAt(),
-//                record.getUpdatedAt()
-//        );
-//    }
 }

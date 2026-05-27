@@ -16,6 +16,8 @@ import { daysUntil, formatCurrency, formatDate } from '@/lib/helpers';
 import { AlertCard } from '@/components/alertCard';
 import { AlertRow } from '@/components/alertRow';
 import { StatCard } from '@/components/statCard';
+import { DashboardCalendar } from '@/components/dashboard/eventsCalendar';
+
 
 export default function DashboardPage() {
   const { data, isLoading, isError } = useQuery<DashboardResponse>({
@@ -140,6 +142,8 @@ export default function DashboardPage() {
           })}
         </AlertCard>
       </div>
+
+      <DashboardCalendar data={data!} />
     </div>
   );
 }

@@ -12,7 +12,12 @@ export async function POST(request: NextRequest) {
   );
 
   if (!session.refreshToken) {
-    return NextResponse.json({ message: 'No session' }, { status: 401 });
+    const clearRes = NextResponse.json(
+      { message: 'No session' },
+      { status: 401 },
+    );
+    clearRes.cookies.delete('trucknest-session');
+    return clearRes;
   }
 
   const params = new URLSearchParams();
@@ -30,8 +35,12 @@ export async function POST(request: NextRequest) {
   );
 
   if (!keycloakResponse.ok) {
-    session.destroy();
-    return NextResponse.json({ message: 'Session expired' }, { status: 401 });
+    const clearRes = NextResponse.json(
+      { message: 'Session expired' },
+      { status: 401 },
+    );
+    clearRes.cookies.delete('trucknest-session');
+    return clearRes;
   }
 
   const tokens = await keycloakResponse.json();

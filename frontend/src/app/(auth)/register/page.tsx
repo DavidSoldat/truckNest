@@ -155,7 +155,7 @@ export default function RegisterPage() {
 
           <Button
             type='submit'
-            className='w-full h-11 font-bold tracking-wide'
+            className='w-full h-11 font-bold tracking-wide cursor-pointer'
             disabled={loading}
           >
             {loading ? (

@@ -50,6 +50,10 @@ async function handler(
     body,
   });
 
+  if (springResponse.status === 204) {
+    return new NextResponse(null, { status: 204 });
+  }
+
   const data = await springResponse.text();
 
   return new NextResponse(data, {

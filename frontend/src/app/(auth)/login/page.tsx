@@ -138,7 +138,7 @@ export default function LoginPage() {
 
             <Button
               type='submit'
-              className='w-full h-11 font-bold tracking-wide'
+              className='w-full h-11 font-bold tracking-wide cursor-pointer'
               disabled={loading}
             >
               {loading ? (
@@ -153,7 +153,7 @@ export default function LoginPage() {
             No account yet?{' '}
             <Link
               href='/register'
-              className='text-primary hover:underline font-medium'
+              className='text-primary hover:underline font-medium cursor-pointer'
             >
               Register your company
             </Link>

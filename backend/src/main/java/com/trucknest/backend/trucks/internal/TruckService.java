@@ -77,22 +77,4 @@ public class TruckService {
                 .orElseThrow(() -> new EntityNotFoundException("Truck not found"));
         truckRepository.delete(truck);
     }
-
-//    temp here, USE MAPSTRUCT!
-//    private TruckResponse toResponse(Truck truck) {
-//        return new TruckResponse(
-//                truck.getId(),
-//                truck.getPlateNumber(),
-//                truck.getMake(),
-//                truck.getModel(),
-//                truck.getYear(),
-//                truck.getVin(),
-//                truck.getNextServiceDate(),
-//                truck.getStatus(),
-//                truck.getEuroStandard(),
-//                truck.getNotes(),
-//                truck.getCreatedAt(),
-//                truck.getUpdatedAt()
-//        );
-//    }
 }

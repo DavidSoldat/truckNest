@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Loader2, Truck, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+import { Loader2, Users, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Table,
@@ -29,57 +29,37 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import api from '@/lib/api';
-import { TruckResponse } from '@/lib/types';
+import { Client } from '@/lib/types';
 import { toast } from 'sonner';
-import { TruckStatusBadge } from './truckStatusBadge';
 
-interface TrucksTableProps {
+interface ClientsTableProps {
   onAddClick: () => void;
-  onEditClick: (truck: TruckResponse) => void;
+  onEditClick: (client: Client) => void;
 }
 
-const formatDate = (date: string | null) => {
-  if (!date) return '—';
-  return new Date(date).toLocaleDateString('en-GB', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  });
-};
-
-const isServiceDueSoon = (date: string | null) => {
-  if (!date) return false;
-  const diff = Math.ceil(
-    (new Date(date).getTime() - Date.now()) / (1000 * 60 * 60 * 24),
-  );
-  return diff <= 14;
-};
-
-export function TrucksTable({ onAddClick, onEditClick }: TrucksTableProps) {
+export function ClientsTable({ onAddClick, onEditClick }: ClientsTableProps) {
   const queryClient = useQueryClient();
-  const [deleteTarget, setDeleteTarget] = useState<TruckResponse | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Client | null>(null);
 
-  const { data: trucks, isLoading } = useQuery<TruckResponse[]>({
-    queryKey: ['trucks'],
+  const { data: clients, isLoading } = useQuery<Client[]>({
+    queryKey: ['clients'],
     queryFn: async () => {
-      const res = await api.get('/trucks');
+      const res = await api.get('/clients');
       return res.data;
     },
   });
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      await api.delete(`/trucks/${id}`);
+      await api.delete(`/clients/${id}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['trucks'] });
+      queryClient.invalidateQueries({ queryKey: ['clients'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard'] });
-      toast.success('Truck deleted');
+      toast.success('Client deleted');
       setDeleteTarget(null);
     },
-    onError: () => {
-      toast.error('Failed to delete truck');
-    },
+    onError: () => toast.error('Failed to delete client'),
   });
 
   if (isLoading) {
@@ -90,13 +70,13 @@ export function TrucksTable({ onAddClick, onEditClick }: TrucksTableProps) {
     );
   }
 
-  if (trucks?.length === 0) {
+  if (clients?.length === 0) {
     return (
       <div className='flex flex-col items-center justify-center h-48 gap-3 bg-card border border-border rounded'>
-        <Truck className='w-8 h-8 text-muted-foreground' />
-        <p className='text-muted-foreground text-sm'>No trucks yet</p>
+        <Users className='w-8 h-8 text-muted-foreground' />
+        <p className='text-muted-foreground text-sm'>No clients yet</p>
         <Button variant='outline' size='sm' onClick={onAddClick}>
-          Add your first truck
+          Add your first client
         </Button>
       </div>
     );
@@ -109,62 +89,41 @@ export function TrucksTable({ onAddClick, onEditClick }: TrucksTableProps) {
           <TableHeader>
             <TableRow className='border-border hover:bg-transparent'>
               <TableHead className='text-xs uppercase tracking-widest text-muted-foreground'>
-                Plate
+                Name
               </TableHead>
               <TableHead className='text-xs uppercase tracking-widest text-muted-foreground'>
-                Make / Model
+                Contact Person
               </TableHead>
               <TableHead className='text-xs uppercase tracking-widest text-muted-foreground'>
-                Year
+                Email
               </TableHead>
               <TableHead className='text-xs uppercase tracking-widest text-muted-foreground'>
-                Euro
+                Phone
               </TableHead>
               <TableHead className='text-xs uppercase tracking-widest text-muted-foreground'>
-                Next Service
-              </TableHead>
-              <TableHead className='text-xs uppercase tracking-widest text-muted-foreground'>
-                Status
+                Payment Terms
               </TableHead>
               <TableHead />
             </TableRow>
           </TableHeader>
           <TableBody>
-            {trucks?.map((truck) => (
+            {clients?.map((client) => (
               <TableRow
-                key={truck.id}
+                key={client.id}
                 className='border-border hover:bg-secondary/50'
               >
-                <TableCell className='font-bold font-mono'>
-                  {truck.plateNumber}
-                </TableCell>
-                <TableCell>
-                  {truck.make} {truck.model}
+                <TableCell className='font-semibold'>{client.name}</TableCell>
+                <TableCell className='text-muted-foreground'>
+                  {client.contactPerson ?? '—'}
                 </TableCell>
                 <TableCell className='text-muted-foreground'>
-                  {truck.year}
+                  {client.contactEmail ?? '—'}
                 </TableCell>
                 <TableCell className='text-muted-foreground'>
-                  {truck.euroStandard?.replace('_', ' ') ?? '—'}
+                  {client.phone ?? '—'}
                 </TableCell>
-                <TableCell>
-                  {truck.nextServiceDate ? (
-                    <span
-                      className={
-                        isServiceDueSoon(truck.nextServiceDate)
-                          ? 'text-primary font-semibold'
-                          : 'text-muted-foreground'
-                      }
-                    >
-                      {formatDate(truck.nextServiceDate)}
-                      {isServiceDueSoon(truck.nextServiceDate) && ' ⚠'}
-                    </span>
-                  ) : (
-                    '—'
-                  )}
-                </TableCell>
-                <TableCell>
-                  <TruckStatusBadge status={truck.status} />
+                <TableCell className='text-muted-foreground'>
+                  {client.paymentTermsDays} days
                 </TableCell>
                 <TableCell className='w-10'>
                   <DropdownMenu>
@@ -172,7 +131,7 @@ export function TrucksTable({ onAddClick, onEditClick }: TrucksTableProps) {
                       <Button
                         variant='ghost'
                         size='icon'
-                        className='h-8 w-8 text-muted-foreground hover:text-foreground'
+                        className='h-8 w-8 text-muted-foreground hover:text-foreground cursor-pointer'
                         onClick={(e) => e.stopPropagation()}
                       >
                         <MoreHorizontal className='w-4 h-4' />
@@ -184,14 +143,14 @@ export function TrucksTable({ onAddClick, onEditClick }: TrucksTableProps) {
                     >
                       <DropdownMenuItem
                         className='cursor-pointer'
-                        onClick={() => onEditClick(truck)}
+                        onClick={() => onEditClick(client)}
                       >
                         <Pencil className='w-4 h-4 mr-2' />
                         Edit
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         className='cursor-pointer text-destructive focus:text-destructive'
-                        onClick={() => setDeleteTarget(truck)}
+                        onClick={() => setDeleteTarget(client)}
                       >
                         <Trash2 className='w-4 h-4 mr-2' />
                         Delete
@@ -212,12 +171,12 @@ export function TrucksTable({ onAddClick, onEditClick }: TrucksTableProps) {
         <AlertDialogContent className='bg-card border-border'>
           <AlertDialogHeader>
             <AlertDialogTitle className='font-black'>
-              Delete Truck
+              Delete Client
             </AlertDialogTitle>
             <AlertDialogDescription>
               Are you sure you want to delete{' '}
               <span className='font-bold text-foreground'>
-                {deleteTarget?.plateNumber}
+                {deleteTarget?.name}
               </span>
               ? This action cannot be undone.
             </AlertDialogDescription>

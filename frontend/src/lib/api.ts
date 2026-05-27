@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { toast } from 'sonner';
 
 const api = axios.create({
   baseURL: '/api/proxy',
@@ -18,13 +19,12 @@ api.interceptors.response.use(
           return api(originalRequest);
         }
       } catch {
-        window.location.href = '/login';
+        toast.error('Your session has expired. Please sign in again.');
+        setTimeout(() => {
+          window.location.href = '/login';
+        }, 1500);
         return Promise.reject(error);
       }
-    }
-
-    if (error.response?.status === 401 && originalRequest._retry) {
-      window.location.href = '/login';
     }
 
     return Promise.reject(error);

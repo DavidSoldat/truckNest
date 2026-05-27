@@ -5,7 +5,6 @@ const publicRoutes = ['/login', '/register'];
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-
   const hasSession = request.cookies.has('trucknest-session');
   const isPublicRoute = publicRoutes.some((route) =>
     pathname.startsWith(route),

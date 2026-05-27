@@ -104,3 +104,57 @@ export interface DriverRequest {
   monthlySalary?: number;
   notes?: string;
 }
+
+export interface Client {
+  id: string;
+  name: string;
+  contactPerson: string | null;
+  contactEmail: string | null;
+  phone: string | null;
+  paymentTermsDays: number;
+  notes: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ClientRequest {
+  name: string;
+  contactPerson?: string;
+  contactEmail?: string;
+  phone?: string;
+  paymentTermsDays: number;
+  notes?: string;
+}
+
+export type InvoiceStatus = 'PENDING' | 'PAID' | 'OVERDUE' | 'CANCELLED';
+
+export interface Invoice {
+  id: string;
+  clientId: string;
+  transportJobId: string | null;
+  invoiceNumber: string;
+  issueDate: string;
+  dueDate: string;
+  amount: number;
+  status: InvoiceStatus;
+  paymentDate: string | null;
+  amountPaid: number | null;
+  reminderSentAt: string | null;
+  notes: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface InvoiceRequest {
+  clientId: string;
+  transportJobId?: string;
+  invoiceNumber: string;
+  issueDate: string;
+  amount: number;
+  notes?: string;
+}
+
+export interface MarkPaidRequest {
+  paymentDate: string;
+  amountPaid: number;
+}
