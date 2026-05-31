@@ -62,7 +62,7 @@ function toYMD(date: string): string {
 export function DashboardCalendar({ data }: DashboardCalendarProps) {
   const today = new Date();
   const [year, setYear] = useState(today.getFullYear());
-  const [month, setMonth] = useState(today.getMonth()); // 0-indexed
+  const [month, setMonth] = useState(today.getMonth()); 
   const [selected, setSelected] = useState<string | null>(null);
 
   const events = useMemo<CalendarEvent[]>(() => {
