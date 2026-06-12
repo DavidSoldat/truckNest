@@ -3,7 +3,7 @@ spring:
     name: trucknest
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/trucknest
+    url: jdbc:postgresql://postgres:5432/trucknest
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -24,10 +24,10 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8080/realms/trucknest
+          issuer-uri: http:/keycloak:8080/realms/trucknest
 
   kafka:
-    bootstrap-servers: localhost:9093
+    bootstrap-servers: kafka:9092
     consumer:
       group-id: trucknest-notifications
       auto-offset-reset: earliest
@@ -38,7 +38,7 @@ spring:
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
   data:
     redis:
-      host: localhost
+      host: redis
       port: 6379
 
   mail:
@@ -75,7 +75,7 @@ management:
 
 keycloak:
   admin:
-    server-url: http://localhost:8080
+    server-url: http://keycloak:8080
     realm: trucknest
     client-id: trucknest-backend
     client-secret: ${KEYCLOAK_CLIENT_SECRET}
