@@ -24,7 +24,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http:/keycloak:8080/realms/trucknest
+          issuer-uri: http://keycloak:8080/realms/trucknest
 
   kafka:
     bootstrap-servers: kafka:9092
