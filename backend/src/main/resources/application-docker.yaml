@@ -1,3 +1,10 @@
 spring:
-  kafka:
-    bootstrap-servers: kafka:9092
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak:8080/realms/trucknest
+          jwk-set-uri: http://keycloak:8080/realms/trucknest/protocol/openid-connect/certs
+
+server:
+  forward-headers-strategy: framework
