@@ -3,7 +3,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://keycloak:8080/realms/trucknest
+          issuer-uri: https://trucknest.duckdns.org/auth/realms/trucknest
           jwk-set-uri: http://keycloak:8080/realms/trucknest/protocol/openid-connect/certs
 
 server:
