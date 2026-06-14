@@ -8,3 +8,10 @@ spring:
 
 server:
   forward-headers-strategy: framework
+
+logging:
+  level:
+    com.trucknest: DEBUG
+    org.springframework.security: DEBUG
+    org.keycloak: DEBUG
+    root: INFO
