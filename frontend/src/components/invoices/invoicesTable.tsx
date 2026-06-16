@@ -191,7 +191,7 @@ export function InvoicesTable({
                 <TableCell>
                   <InvoiceStatusBadge status={invoice.status} />
                 </TableCell>
-                <TableCell className='text-muted-foreground'>
+                <TableCell className='text-muted-foreground cursor-pointer'>
                   {invoice.amountPaid != null
                     ? formatCurrency(invoice.amountPaid)
                     : '—'}

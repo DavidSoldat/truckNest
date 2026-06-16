@@ -223,11 +223,11 @@ export function TrucksTable({ onAddClick, onEditClick }: TrucksTableProps) {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className='border-border'>
+            <AlertDialogCancel className='border-border cursor-pointer'>
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
-              className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
+              className='bg-destructive text-destructive-foreground hover:bg-destructive/90 cursor-pointer'
               onClick={() =>
                 deleteTarget && deleteMutation.mutate(deleteTarget.id)
               }

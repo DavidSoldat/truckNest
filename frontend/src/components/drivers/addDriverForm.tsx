@@ -260,7 +260,7 @@ export function AddDriverDialog({
               />
             </div>
             <div className='space-y-1.5'>
-              <Label className='text-xs uppercase tracking-widest text-muted-foreground'>
+              <Label className='text-xs uppercase tracking-widest text-muted-foreground cursor-pointer'>
                 Status
               </Label>
               <Select
@@ -300,14 +300,14 @@ export function AddDriverDialog({
           <Button
             variant='outline'
             onClick={() => onOpenChange(false)}
-            className='border-border'
+            className='border-border cursor-pointer'
           >
             Cancel
           </Button>
           <Button
             onClick={handleSubmit}
             disabled={isPending}
-            className='font-bold'
+            className='font-bold cursor-pointer'
           >
             {isPending ? (
               <Loader2 className='w-4 h-4 animate-spin' />

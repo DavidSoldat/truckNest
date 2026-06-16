@@ -30,7 +30,10 @@ export default function TrucksPage() {
             Manage your fleet
           </p>
         </div>
-        <Button onClick={() => setDialogOpen(true)} className='font-bold'>
+        <Button
+          onClick={() => setDialogOpen(true)}
+          className='font-bold cursor-pointer'
+        >
           <Plus className='w-4 h-4 mr-2' />
           Add Truck
         </Button>

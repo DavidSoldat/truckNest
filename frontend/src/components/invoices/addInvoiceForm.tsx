@@ -101,7 +101,7 @@ export function AddInvoiceDialog({
 
         <div className='space-y-4 py-2'>
           <div className='space-y-1.5'>
-            <Label className='text-xs uppercase tracking-widest text-muted-foreground'>
+            <Label className='text-xs uppercase tracking-widest text-muted-foreground cursor-pointer'>
               Client *
             </Label>
             <Select
@@ -185,14 +185,14 @@ export function AddInvoiceDialog({
           <Button
             variant='outline'
             onClick={() => onOpenChange(false)}
-            className='border-border'
+            className='border-border cursor-pointer'
           >
             Cancel
           </Button>
           <Button
             onClick={handleSubmit}
             disabled={createMutation.isPending}
-            className='font-bold'
+            className='font-bold cursor-pointer'
           >
             {createMutation.isPending ? (
               <Loader2 className='w-4 h-4 animate-spin' />
