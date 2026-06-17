@@ -1,17 +1,10 @@
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/trucknest
   security:
     oauth2:
       resourceserver:
         jwt:
           issuer-uri: https://dummy-auth/realms/trucknest
           jwk-set-uri: https://dummy-auth/protocol/openid-connect/certs
-  kafka:
-    bootstrap-servers: localhost:9092
-  data:
-    redis:
-      host: localhost
 
 brevo:
   from-email: test@test.com

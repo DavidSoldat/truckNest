@@ -12,11 +12,16 @@ import org.testcontainers.postgresql.PostgreSQLContainer;
 @SpringBootTest
 @Testcontainers
 @ActiveProfiles("test")
+@EmbeddedKafka
 class BackendApplicationTests {
 
 	@Container
 	@ServiceConnection
 	static PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:16-alpine");
+
+	@Container
+	@ServiceConnection
+	static RedisContainer redis = new RedisContainer("redis:7-alpine");
 
 	@Test
 	void contextLoads() {
