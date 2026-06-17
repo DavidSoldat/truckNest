@@ -1,8 +1,0 @@
-spring:
-  datasource:
-    username: trucknest
-    password: trucknestsecret
-
-logging:
-  level:
-    org.springframework.mail: DEBUG
