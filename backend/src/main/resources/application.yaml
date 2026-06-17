@@ -42,10 +42,10 @@ spring:
       port: 6379
 
   mail:
-    host: ${BREVO_SMTP_HOST}
-    port: ${BREVO_SMTP_PORT}
-    username: ${BREVO_SMTP_USERNAME}
-    password: ${BREVO_SMTP_PASSWORD}
+    host: ${BREVO_SMTP_HOST:localhost}
+    port: ${BREVO_SMTP_PORT:587}
+    username: ${BREVO_SMTP_USERNAME:test}
+    password: ${BREVO_SMTP_PASSWORD:test}
     properties:
       mail:
         smtp:
