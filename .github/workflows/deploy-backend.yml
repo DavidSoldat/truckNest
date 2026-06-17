@@ -20,7 +20,7 @@ jobs:
 
       - name: Run tests
         working-directory: ./backend
-        run: mvn test
+        run: mvn test -e
 
   deploy:
     needs: test
