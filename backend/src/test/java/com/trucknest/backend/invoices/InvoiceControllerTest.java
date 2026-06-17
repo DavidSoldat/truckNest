@@ -12,6 +12,7 @@ import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.AuditorAware;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -29,6 +30,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(InvoiceController.class)
 @DisplayName("InvoiceController Web Layer Tests")
 @Import(InvoiceControllerTest.TestConfig.class)
+@TestPropertySource(properties = {
+        "spring.security.oauth2.resourceserver.jwt.jwk-set-uri=https://dummy-auth/protocol/openid-connect/certs"
+})
 class InvoiceControllerTest {
 
     @Autowired
