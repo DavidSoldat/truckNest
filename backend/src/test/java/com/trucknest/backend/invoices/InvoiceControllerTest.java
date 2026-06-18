@@ -32,6 +32,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayName("InvoiceController Web Layer Tests")
 @Import(InvoiceControllerTest.TestConfig.class)
 @ActiveProfiles("test")
+@TestPropertySource(properties = {
+        "spring.security.oauth2.resourceserver.jwt.jwk-set-uri=https://dummy-auth/protocol/openid-connect/certs",
+        "keycloak.admin.client-secret=dummy",
+        "brevo.from-email=test@test.com"
+})
 class InvoiceControllerTest {
 
     @Autowired
