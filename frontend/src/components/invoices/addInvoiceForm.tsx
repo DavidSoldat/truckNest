@@ -121,7 +121,7 @@ export function AddInvoiceDialog({
             </Select>
           </div>
 
-          <div className='grid grid-cols-2 gap-3'>
+          <div className='grid grid-cols-2 gap-3 '>
             <div className='space-y-1.5'>
               <Label className='text-xs uppercase tracking-widest text-muted-foreground'>
                 Invoice Number *
