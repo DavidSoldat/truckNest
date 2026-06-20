@@ -93,5 +93,6 @@ public class NotificationConsumer {
         } catch (Exception e) {
             log.error("Failed to send email to {}", to, e);
         }
+        
     }
 }

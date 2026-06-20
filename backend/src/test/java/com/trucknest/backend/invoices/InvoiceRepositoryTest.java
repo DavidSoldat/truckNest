@@ -34,7 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import(JpaConfig.class)
 class InvoiceRepositoryTest {
-    
+
     @TestConfiguration
     static class TestConfig {
         @Bean("auditorAwareImpl")
