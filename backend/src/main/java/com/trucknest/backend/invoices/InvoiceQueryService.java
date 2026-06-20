@@ -55,4 +55,33 @@ public class InvoiceQueryService {
         return invoiceRepository.findAllByCompanyIdAndStatusOrderByIssueDateDesc(
                 companyId, InvoiceStatus.PENDING).size();
     }
+
+    public List<InvoiceOverdueDto> findOverdueInvoicesForCompany(UUID companyId) {
+        return invoiceRepository.findAllByCompanyIdAndStatusAndDueDateBefore(
+                        companyId, InvoiceStatus.PENDING, LocalDate.now())
+                .stream()
+                .map(invoice -> new InvoiceOverdueDto(
+                        invoice.getId(),
+                        invoice.getInvoiceNumber(),
+                        invoice.getClientId(),
+                        invoice.getDueDate(),
+                        invoice.getAmount(),
+                        invoice.getCompanyId()
+                ))
+                .toList();
+    }
+
+    public List<InvoiceOverdueDto> findAllOverdueInvoices(LocalDate date) {
+        return invoiceRepository.findAllOverdue(InvoiceStatus.PENDING, date)
+                .stream()
+                .map(invoice -> new InvoiceOverdueDto(
+                        invoice.getId(),
+                        invoice.getInvoiceNumber(),
+                        invoice.getClientId(),
+                        invoice.getDueDate(),
+                        invoice.getAmount(),
+                        invoice.getCompanyId()
+                ))
+                .toList();
+    }
 }

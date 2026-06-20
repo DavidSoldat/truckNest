@@ -31,6 +31,19 @@ public class TruckQueryService {
                 .toList();
     }
 
+    public List<TruckServiceDueDto> findTrucksWithServiceDueBeforeForCompany(UUID companyId, LocalDate date) {
+        return truckRepository.findAllByCompanyIdAndNextServiceDateBefore(companyId, date)
+                .stream()
+                .map(truck -> new TruckServiceDueDto(
+                        truck.getId(),
+                        truck.getPlateNumber(),
+                        truck.getNextServiceDate(),
+                        truck.getServiceDueNotifiedFor(),
+                        truck.getCompanyId()
+                ))
+                .toList();
+    }
+
     public long countByCompanyId(UUID companyId) {
         return truckRepository.findAllByCompanyId(companyId).size();
     }

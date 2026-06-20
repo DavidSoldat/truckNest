@@ -298,7 +298,7 @@ public class InvoiceServiceTest {
             Invoice inv2 = buildInvoice(InvoiceStatus.PENDING);
             List<Invoice> overdueInvoices = List.of(inv1, inv2);
 
-            when(invoiceRepository.findAllPendingOverdue(
+            when(invoiceRepository.findAllOverdue(
                     eq(InvoiceStatus.PENDING), any(LocalDate.class)))
                     .thenReturn(overdueInvoices);
 
@@ -312,7 +312,7 @@ public class InvoiceServiceTest {
         @Test
         @DisplayName("shouldnt do anything when there are no pending overdue invoices")
         void shouldDoNothingWhenNoOverdueInvoices() {
-            when(invoiceRepository.findAllPendingOverdue(
+            when(invoiceRepository.findAllOverdue(
                     eq(InvoiceStatus.PENDING), any(LocalDate.class)))
                     .thenReturn(List.of());
 

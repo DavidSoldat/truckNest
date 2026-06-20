@@ -73,23 +73,15 @@ public class DashboardService {
         LocalDate today = LocalDate.now();
 
         List<TruckServiceDueDto> servicesDue = truckQueryService
-                .findTrucksWithServiceDueBefore(today.plusDays(14))
-                .stream()
-                .filter(t -> t.companyId().equals(companyId))
-                .toList();
+                .findTrucksWithServiceDueBeforeForCompany(companyId, today.plusDays(14));
 
         List<DriverDocumentDto> documentsExpiring = Stream.concat(
-                driverQueryService.findDriversWithLicenseExpiryBefore(today.plusDays(30))
-                        .stream().filter(d -> d.companyId().equals(companyId)),
-                driverQueryService.findDriversWithVisaExpiryBefore(today.plusDays(30))
-                        .stream().filter(d -> d.companyId().equals(companyId))
+                driverQueryService.findDriversWithLicenseExpiryBeforeForCompany(companyId, today.plusDays(30)).stream(),
+                driverQueryService.findDriversWithVisaExpiryBeforeForCompany(companyId, today.plusDays(30)).stream()
         ).distinct().toList();
 
         List<InvoiceOverdueDto> overdueInvoices = invoiceQueryService
-                .findPendingOverdueInvoices(today)
-                .stream()
-                .filter(i -> i.companyId().equals(companyId))
-                .toList();
+                .findOverdueInvoicesForCompany(companyId);
 
         long totalTrucks = truckQueryService.countByCompanyId(companyId);
         long totalDrivers = driverQueryService.countByCompanyId(companyId);

@@ -87,7 +87,7 @@ public class InvoiceService {
 
     public void markOverdueInvoices() {
         List<Invoice> overdueInvoices = invoiceRepository
-                .findAllPendingOverdue(InvoiceStatus.PENDING, LocalDate.now());
+                .findAllOverdue(InvoiceStatus.PENDING, LocalDate.now());
 
         overdueInvoices.forEach(invoice -> invoice.setStatus(InvoiceStatus.OVERDUE));
         invoiceRepository.saveAll(overdueInvoices);

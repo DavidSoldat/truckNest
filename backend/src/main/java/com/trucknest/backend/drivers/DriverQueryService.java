@@ -48,6 +48,36 @@ public class DriverQueryService {
                 .toList();
     }
 
+    public List<DriverDocumentDto> findDriversWithLicenseExpiryBeforeForCompany(UUID companyId, LocalDate date) {
+        return driverRepository.findAllByCompanyIdAndLicenseExpiryBefore(companyId, date)
+                .stream()
+                .map(driver -> new DriverDocumentDto(
+                        driver.getId(),
+                        driver.getFirstName() + " " + driver.getLastName(),
+                        driver.getLicenseExpiry(),
+                        driver.getVisaExpiry(),
+                        driver.getLicenseExpiryNotifiedFor(),
+                        driver.getVisaExpiryNotifiedFor(),
+                        driver.getCompanyId()
+                ))
+                .toList();
+    }
+
+    public List<DriverDocumentDto> findDriversWithVisaExpiryBeforeForCompany(UUID companyId, LocalDate date) {
+        return driverRepository.findAllByCompanyIdAndVisaExpiryBefore(companyId, date)
+                .stream()
+                .map(driver -> new DriverDocumentDto(
+                        driver.getId(),
+                        driver.getFirstName() + " " + driver.getLastName(),
+                        driver.getLicenseExpiry(),
+                        driver.getVisaExpiry(),
+                        driver.getLicenseExpiryNotifiedFor(),
+                        driver.getVisaExpiryNotifiedFor(),
+                        driver.getCompanyId()
+                ))
+                .toList();
+    }
+
     public long countByCompanyId(UUID companyId) {
         return driverRepository.findAllByCompanyId(companyId).size();
     }

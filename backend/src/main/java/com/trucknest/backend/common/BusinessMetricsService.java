@@ -71,7 +71,7 @@ public class BusinessMetricsService {
     private double countOverdueInvoices() {
         try {
             return invoiceQueryService
-                    .findPendingOverdueInvoices(LocalDate.now())
+                    .findAllOverdueInvoices(LocalDate.now())
                     .size();
         } catch (Exception e) {
             log.error("Failed to count overdue invoices", e);

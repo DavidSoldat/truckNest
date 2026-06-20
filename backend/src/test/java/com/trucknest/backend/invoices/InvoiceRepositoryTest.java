@@ -73,7 +73,7 @@ class InvoiceRepositoryTest {
         em.persist(paid);
         em.flush();
 
-        List<Invoice> result = invoiceRepository.findAllPendingOverdue(
+        List<Invoice> result = invoiceRepository.findAllOverdue (
                 InvoiceStatus.PENDING, LocalDate.now());
 
         assertThat(result).hasSize(1);
