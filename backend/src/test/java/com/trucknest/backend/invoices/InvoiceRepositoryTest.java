@@ -1,6 +1,7 @@
 package com.trucknest.backend.invoices;
 
 import com.trucknest.backend.common.entity.Company;
+import com.trucknest.backend.config.JpaConfig;
 import com.trucknest.backend.invoices.internal.Invoice;
 import com.trucknest.backend.invoices.internal.InvoiceRepository;
 import com.trucknest.backend.invoices.internal.InvoiceStatus;
@@ -12,6 +13,7 @@ import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 import org.springframework.boot.jpa.test.autoconfigure.TestEntityManager;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.context.annotation.Import;
 import org.testcontainers.postgresql.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -30,8 +32,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @Testcontainers
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Import(JpaConfig.class)
 class InvoiceRepositoryTest {
-
+    
     @TestConfiguration
     static class TestConfig {
         @Bean("auditorAwareImpl")
