@@ -32,6 +32,7 @@ jobs:
           host: ${{ secrets.OCI_HOST }}
           username: ubuntu
           key: ${{ secrets.OCI_SSH_PRIVATE_KEY }}
+          port: 2222
           script: |
             cd ~/truckNest
             git pull origin main
