@@ -123,7 +123,7 @@ export function AddClientDialog({
             <Input
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
-              placeholder='Acme d.o.o.'
+              placeholder='Truck Company d.o.o.'
               className='bg-secondary border-border'
             />
           </div>
@@ -138,7 +138,7 @@ export function AddClientDialog({
                 onChange={(e) =>
                   setForm({ ...form, contactPerson: e.target.value })
                 }
-                placeholder='Ime Prezime'
+                placeholder='Marko Petrovic'
                 className='bg-secondary border-border'
               />
             </div>

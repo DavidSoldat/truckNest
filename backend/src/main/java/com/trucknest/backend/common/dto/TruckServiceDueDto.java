@@ -7,5 +7,6 @@ public record TruckServiceDueDto(
         UUID id,
         String plateNumber,
         LocalDate nextServiceDate,
+        LocalDate serviceDueNotifiedFor,
         UUID companyId
 ) {}

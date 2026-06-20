@@ -93,7 +93,7 @@ export function DriversTable({ onAddClick, onEditClick }: DriversTableProps) {
       <div className='flex flex-col items-center justify-center h-48 gap-3 bg-card border border-border rounded'>
         <Users className='w-8 h-8 text-muted-foreground' />
         <p className='text-muted-foreground text-sm'>No drivers yet</p>
-        <Button variant='outline' size='sm' onClick={onAddClick}>
+        <Button variant='outline' size='sm' onClick={onAddClick} className='cursor-pointer'>
           Add your first driver
         </Button>
       </div>

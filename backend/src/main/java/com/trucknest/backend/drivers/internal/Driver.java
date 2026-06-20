@@ -38,6 +38,12 @@ public class Driver extends BaseEntity {
     @Column(name = "visa_expiry")
     private LocalDate visaExpiry;
 
+    @Column(name = "license_expiry_notified_for")
+    private LocalDate licenseExpiryNotifiedFor;
+
+    @Column(name = "visa_expiry_notified_for")
+    private LocalDate visaExpiryNotifiedFor;
+
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private DriverStatus status = DriverStatus.ACTIVE;

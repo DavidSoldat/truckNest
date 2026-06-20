@@ -1,6 +1,9 @@
 package com.trucknest.backend.drivers.internal;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -22,4 +25,12 @@ public interface DriverRepository extends JpaRepository<Driver, UUID> {
     List<Driver> findAllByLicenseExpiryBefore(LocalDate date);
 
     List<Driver> findAllByVisaExpiryBefore(LocalDate date);
+
+    @Modifying
+    @Query("UPDATE Driver d SET d.licenseExpiryNotifiedFor = :date WHERE d.id = :id")
+    void markLicenseExpiryNotified(@Param("id") UUID id, @Param("date") LocalDate date);
+
+    @Modifying
+    @Query("UPDATE Driver d SET d.visaExpiryNotifiedFor = :date WHERE d.id = :id")
+    void markVisaExpiryNotified(@Param("id") UUID id, @Param("date") LocalDate date);
 }

@@ -22,7 +22,7 @@ public interface InvoiceRepository extends JpaRepository<Invoice, UUID> {
     List<Invoice> findAllByCompanyIdAndStatusAndDueDateBefore(
             UUID companyId, InvoiceStatus status, LocalDate date);
 
-    @Query("SELECT i FROM Invoice i WHERE i.status = :status AND i.dueDate < :date")
-    List<Invoice> findAllPendingOverdue(@Param("status") InvoiceStatus status,
-                                        @Param("date") LocalDate date);
+    @Query("SELECT i FROM Invoice i WHERE i.status = :status AND i.dueDate = :date")
+    List<Invoice> findAllDueToday(@Param("status") InvoiceStatus status,
+                                  @Param("date") LocalDate date);
 }

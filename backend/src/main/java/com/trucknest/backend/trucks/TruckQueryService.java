@@ -2,6 +2,7 @@ package com.trucknest.backend.trucks;
 
 import com.trucknest.backend.common.dto.TruckServiceDueDto;
 import com.trucknest.backend.trucks.internal.TruckRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -24,6 +25,7 @@ public class TruckQueryService {
                         truck.getId(),
                         truck.getPlateNumber(),
                         truck.getNextServiceDate(),
+                        truck.getServiceDueNotifiedFor(),
                         truck.getCompanyId()
                 ))
                 .toList();
@@ -31,5 +33,10 @@ public class TruckQueryService {
 
     public long countByCompanyId(UUID companyId) {
         return truckRepository.findAllByCompanyId(companyId).size();
+    }
+
+    @Transactional
+    public void markServiceDueNotified(UUID truckId, LocalDate serviceDate) {
+        truckRepository.markServiceDueNotified(truckId, serviceDate);
     }
 }

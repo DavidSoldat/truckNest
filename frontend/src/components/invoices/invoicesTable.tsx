@@ -130,7 +130,12 @@ export function InvoicesTable({
       <div className='flex flex-col items-center justify-center h-48 gap-3 bg-card border border-border rounded'>
         <FileText className='w-8 h-8 text-muted-foreground' />
         <p className='text-muted-foreground text-sm'>No invoices yet</p>
-        <Button variant='outline' size='sm' onClick={onAddClick}>
+        <Button
+          variant='outline'
+          size='sm'
+          onClick={onAddClick}
+          className='cursor-pointer'
+        >
           Create your first invoice
         </Button>
       </div>
@@ -202,7 +207,7 @@ export function InvoicesTable({
                       <Button
                         variant='ghost'
                         size='icon'
-                        className='h-8 w-8 text-muted-foreground hover:text-foreground'
+                        className='h-8 w-8 text-muted-foreground hover:text-foreground cursor-pointer'
                         onClick={(e) => e.stopPropagation()}
                       >
                         <MoreHorizontal className='w-4 h-4' />

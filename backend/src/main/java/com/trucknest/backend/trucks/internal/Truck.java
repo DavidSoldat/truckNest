@@ -31,6 +31,9 @@ public class Truck extends BaseEntity {
     @Column(name = "next_service_date")
     private LocalDate nextServiceDate;
 
+    @Column(name = "service_due_notified_for")
+    private LocalDate serviceDueNotifiedFor;
+
     @Column(name = "euro_standard", nullable = false)
     @Enumerated(EnumType.STRING)
     private EuroStandard euroStandard = EuroStandard.EURO_6;

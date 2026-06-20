@@ -8,5 +8,7 @@ public record DriverDocumentDto(
         String fullName,
         LocalDate licenseExpiry,
         LocalDate visaExpiry,
+        LocalDate licenseExpiryNotifiedFor,
+        LocalDate visaExpiryNotifiedFor,
         UUID companyId
 ) {}

@@ -35,8 +35,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource(properties = {
         "spring.security.oauth2.resourceserver.jwt.jwk-set-uri=https://dummy-auth/protocol/openid-connect/certs",
         "keycloak.admin.client-secret=dummy",
-        "brevo.from-email=test@test.com"
+        "brevo.from-email=test@test.com",
+        "spring.autoconfigure.exclude=org.springframework.boot.kafka.autoconfigure.KafkaAutoConfiguration"
 })
+
 class InvoiceControllerTest {
 
     @Autowired

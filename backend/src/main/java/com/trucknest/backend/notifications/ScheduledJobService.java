@@ -46,6 +46,9 @@ public class ScheduledJobService {
         LocalDate threshold = LocalDate.now().plusDays(14);
 
         truckQueryService.findTrucksWithServiceDueBefore(threshold).forEach(truck -> {
+            if (truck.nextServiceDate().equals(truck.serviceDueNotifiedFor())) {
+                return;
+            }
             try {
                 ServiceDueEvent event = new ServiceDueEvent(
                         truck.id(),
@@ -56,6 +59,7 @@ public class ScheduledJobService {
                 );
                 kafkaTemplate.send(KafkaTopics.SERVICE_DUE,
                         objectMapper.writeValueAsString(event));
+                truckQueryService.markServiceDueNotified(truck.id(), truck.nextServiceDate());
                 log.info("Emitted service due event for truck {}", truck.plateNumber());
             } catch (Exception e) {
                 log.error("Failed to emit service due event for truck {}", truck.id(), e);
@@ -69,6 +73,9 @@ public class ScheduledJobService {
         LocalDate threshold = LocalDate.now().plusDays(30);
 
         driverQueryService.findDriversWithLicenseExpiryBefore(threshold).forEach(driver -> {
+            if (driver.licenseExpiry().equals(driver.licenseExpiryNotifiedFor())) {
+                return;
+            }
             try {
                 DocumentExpiryEvent event = new DocumentExpiryEvent(
                         driver.id(),
@@ -80,12 +87,16 @@ public class ScheduledJobService {
                 );
                 kafkaTemplate.send(KafkaTopics.DOCUMENT_EXPIRY,
                         objectMapper.writeValueAsString(event));
+                driverQueryService.markLicenseExpiryNotified(driver.id(), driver.licenseExpiry());
             } catch (Exception e) {
                 log.error("Failed to emit document expiry event for driver {}", driver.id(), e);
             }
         });
 
         driverQueryService.findDriversWithVisaExpiryBefore(threshold).forEach(driver -> {
+            if (driver.visaExpiry().equals(driver.visaExpiryNotifiedFor())) {
+                return;
+            }
             try {
                 DocumentExpiryEvent event = new DocumentExpiryEvent(
                         driver.id(),
@@ -97,6 +108,7 @@ public class ScheduledJobService {
                 );
                 kafkaTemplate.send(KafkaTopics.DOCUMENT_EXPIRY,
                         objectMapper.writeValueAsString(event));
+                driverQueryService.markVisaExpiryNotified(driver.id(), driver.visaExpiry());
             } catch (Exception e) {
                 log.error("Failed to emit document expiry event for driver {}", driver.id(), e);
             }
@@ -107,7 +119,7 @@ public class ScheduledJobService {
     public void checkOverdueInvoices() {
         log.info("Running overdue invoice check");
 
-        invoiceQueryService.findPendingOverdueInvoices(LocalDate.now()).forEach(invoice -> {
+        invoiceQueryService.findPendingDueTodayInvoices(LocalDate.now()).forEach(invoice -> {
             try {
                 invoiceQueryService.markAsOverdue(invoice.id());
 

@@ -26,11 +26,11 @@ export default function DashboardLayout({
         <header className='h-12 border-b border-border flex items-center px-4 gap-3'>
           <SidebarTrigger className='text-muted-foreground hover:text-foreground cursor-pointer' />
           <div className='w-px h-4 bg-border' />
-          <span className='text-xs text-muted-foreground uppercase tracking-widest'>
+          <span className='text-xs text-muted-foreground uppercase tracking-widest cursor-default'>
             Fleet Management
           </span>
           {company?.name && (
-            <span className='ml-auto text-xs font-semibold text-muted-foreground uppercase tracking-widest'>
+            <span className='ml-auto text-xs font-semibold text-muted-foreground uppercase tracking-widest cursor-default'>
               {company.name}
             </span>
           )}

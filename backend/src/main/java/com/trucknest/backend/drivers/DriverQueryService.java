@@ -2,6 +2,7 @@ package com.trucknest.backend.drivers;
 
 import com.trucknest.backend.common.dto.DriverDocumentDto;
 import com.trucknest.backend.drivers.internal.DriverRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -25,6 +26,8 @@ public class DriverQueryService {
                         driver.getFirstName() + " " + driver.getLastName(),
                         driver.getLicenseExpiry(),
                         driver.getVisaExpiry(),
+                        driver.getLicenseExpiryNotifiedFor(),
+                        driver.getVisaExpiryNotifiedFor(),
                         driver.getCompanyId()
                 ))
                 .toList();
@@ -38,6 +41,8 @@ public class DriverQueryService {
                         driver.getFirstName() + " " + driver.getLastName(),
                         driver.getLicenseExpiry(),
                         driver.getVisaExpiry(),
+                        driver.getLicenseExpiryNotifiedFor(),
+                        driver.getVisaExpiryNotifiedFor(),
                         driver.getCompanyId()
                 ))
                 .toList();
@@ -45,5 +50,15 @@ public class DriverQueryService {
 
     public long countByCompanyId(UUID companyId) {
         return driverRepository.findAllByCompanyId(companyId).size();
+    }
+
+    @Transactional
+    public void markLicenseExpiryNotified(UUID driverId, LocalDate licenseExpiry) {
+        driverRepository.markLicenseExpiryNotified(driverId, licenseExpiry);
+    }
+
+    @Transactional
+    public void markVisaExpiryNotified(UUID driverId, LocalDate licenseExpiry) {
+        driverRepository.markVisaExpiryNotified(driverId, licenseExpiry);
     }
 }
