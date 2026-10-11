@@ -191,8 +191,6 @@ services:
         condition: service_healthy
       keycloak:
         condition: service_started
-    profiles:
-      - full
 
   next-app:
     build:
@@ -200,16 +198,16 @@ services:
       dockerfile: Dockerfile
     container_name: trucknest-frontend
     restart: unless-stopped
+    env_file:
+      - path: ./frontend/.env
+        required: false
     environment:
-      NEXT_PUBLIC_API_URL: http://localhost:8081
-      NEXT_PUBLIC_KEYCLOAK_URL: http://localhost:8080
-      NEXT_PUBLIC_KEYCLOAK_REALM: trucknest
-      NEXT_PUBLIC_KEYCLOAK_CLIENT_ID: trucknest-frontend
+      # server-side calls go over the docker network; token issuer must match the backend's issuer-uri
+      API_URL: http://spring-app:8081
+      KEYCLOAK_URL: http://keycloak:8080
     ports:
       - '3000:3000'
     networks:
       - trucknest-network
     depends_on:
       - spring-app
-    profiles:
-      - full
